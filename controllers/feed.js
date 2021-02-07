@@ -8,7 +8,6 @@ const io = require('../socket')
 const Post = require('../models/post')
 const User = require('../models/user')
 
-
 exports.getPosts = async (req, res, next) => {
   const currentPage = req.query.page || 1
   const perPage = 2
@@ -62,7 +61,7 @@ exports.createPost = async (req, res, next) => {
   })
   try {
     await post.save()
-    let user = await User.findById(req.userId)
+    const user = await User.findById(req.userId)
     user.posts.push(post)
     await user.save()
 
@@ -195,7 +194,6 @@ exports.deletePost = async (req, res, next) => {
     res.status(200).json({
       message: 'Post deleted successfully!'
     })
-
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500

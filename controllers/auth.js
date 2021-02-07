@@ -6,7 +6,6 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 exports.signup = async (req, res, next) => {
-
   const errors = validationResult(req)
 
   if (!errors.isEmpty()) {
@@ -32,7 +31,6 @@ exports.signup = async (req, res, next) => {
       message: 'New user is created',
       userId: result._id
     })
-
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500
@@ -63,7 +61,7 @@ exports.login = async (req, res, next) => {
     }
     const token = jwt.sign({
       email: loadedUser.email,
-      userId: loadedUser._id.toString(),
+      userId: loadedUser._id.toString()
     },
     'secret',
     { expiresIn: '1h' }

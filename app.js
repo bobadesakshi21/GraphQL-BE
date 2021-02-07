@@ -5,12 +5,12 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const multer = require('multer')
+const { graphqlHTTP } = require('express-graphql')
 
+const graphqlSchema = require('./graphql/schema')
+const graphqlResolver = require('./graphql/resolvers')
 
 const MONGODB_URI = 'mongodb+srv://Sakshi:sakshi123@cluster0.vpzlm.mongodb.net/messages?retryWrites=true&w=majority'
-
-const feedRoutes = require('./routes/feed')
-const authRoutes = require('./routes/auth')
 
 const app = express()
 
@@ -36,7 +36,7 @@ const fileFilter = (req, file, cb) => {
 }
 
 // app.use(bodyParser.urlencoded({})) // x-www-form-urlencoded
-app.use(bodyParser.json()) //application/json
+app.use(bodyParser.json()) // application/json
 app.use(multer({ storage: fileStorage, filter: fileFilter }).single('image'))
 
 app.use('/images', express.static(path.join(__dirname, 'images')))
@@ -48,6 +48,11 @@ app.use((req, res, next) => {
   next()
 })
 
+app.use('/graphql', graphqlHTTP({
+  schema: graphqlSchema,
+  rootValue: graphqlResolver,
+  graphiql: true
+}))
 
 app.use((error, req, res, next) => {
   console.log(error)
@@ -63,7 +68,6 @@ app.use((error, req, res, next) => {
 mongoose.connect(MONGODB_URI)
   .then(() => {
     app.listen(8080)
-    const io = require('./socket').init(server)
   })
   .catch(err => {
     console.log('CONNECTION ERR', err)
