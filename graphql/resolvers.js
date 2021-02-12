@@ -10,7 +10,7 @@ module.exports = {
     //   const email = args.userInput.email;
     const errors = []
     if (!validator.isEmail(userInput.email)) {
-      errors.push({ message: 'E-Mail is invalid.' });
+      errors.push({ message: 'E-Mail is invalid.' })
     }
     if (
       validator.isEmpty(userInput.password) ||
@@ -35,8 +35,8 @@ module.exports = {
       email: userInput.email,
       name: userInput.name,
       password: hashedPw
-    });
-    const createdUser = await user.save();
+    })
+    const createdUser = await user.save()
     return { ...createdUser._doc, _id: createdUser._id.toString() }
   },
   login: async function ({ email, password }) {
@@ -57,7 +57,7 @@ module.exports = {
         userId: user._id.toString(),
         email: user.email
       },
-      'somesupersecretsecret',
+      'secret',
       { expiresIn: '1h' }
     )
     return { token: token, userId: user._id.toString() }
@@ -107,6 +107,36 @@ module.exports = {
       _id: createdPost._id.toString(),
       createdAt: createdPost.createdAt.toISOString(),
       updatedAt: createdPost.updatedAt.toISOString()
+    }
+  },
+
+  posts: async function ({ page }, req) {
+    if (!req.isAuth) {
+      const error = new Error('Not authenticated!')
+      error.code = 401
+      throw error
+    }
+    if (!page) {
+      page = 1
+    }
+    const perPage = 2
+
+    const totalPosts = await Post.find().countDocuments()
+    const posts = await Post.find()
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * perPage)
+      .limit(perPage)
+      .populate('creator')
+    return {
+      posts: posts.map(p => {
+        return {
+          ...p._doc,
+          _id: p._id.toString(),
+          createdAt: p.createdAt.toISOString(),
+          updatedAt: p.updatedAt.toISOString()
+        }
+      }),
+      totalPosts: totalPosts
     }
   }
 }
