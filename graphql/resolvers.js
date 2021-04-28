@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken')
 
 const User = require('../models/user')
 const Post = require('../models/post')
+
 const { clearImage } = require('../util/file')
 
 module.exports = {
