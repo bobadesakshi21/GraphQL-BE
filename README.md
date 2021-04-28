@@ -7,12 +7,10 @@
 
 ### Description
 ----
-This is a REST API developed using Node.js that implememts the user authentication. Following are the functionalities available:
+This is a REST API developed using Node.js that implememts the basic feed post functionalities. Following are the functionalities available:
 
-* SignUp
-* Login
-* JWT Auth
-* Logout from current/other/all devices
+* SignUp / Login / JWT Auth
+* Create/ Read / Update/ Delete Posts
 
 
 ### Requirements
