@@ -7,7 +7,7 @@
 
 ### Description
 ----
-This is a REST API developed using Node.js that implememts the basic feed post features. Following are the functionalities available:
+This API is developed using Node.js that implememts the basic feed post features. Following are the functionalities available:
 
 * SignUp / Login / JWT Auth
 * Create/ Read / Update/ Delete Posts
